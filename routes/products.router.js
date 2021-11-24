@@ -3,6 +3,10 @@ const { fake } = require('faker');
 const faker = require('faker');
 const ProductServices = require('../services/products.services');
 
+const validatorHandler = require('./../middlewares/validator.handler');
+const {createProductSchema,updateProductSchema} = require('./../schemas/product.schema');
+
+
 const productServices = new ProductServices();
 
 const router = express.Router();
@@ -42,19 +46,28 @@ router.get('/products/:id', (req,res, next)=>{
 
 //Post route
 
-router.post('/products',(req, res)=>{
-  const body = req.body;
-  const data = body;
-  const newProduct = productServices.create(res, data);
-  res.status(201).json({
+router.post('/products',
+validatorHandler(createProductSchema, 'body') ///Revisar acá
+,async (req, res, next)=>{
+  try {
+    const body = req.body;
+    const data = body;
+    const newProduct = await productServices.create(res, data);
+    res.status(201).json({
     message:"new Product",
     newProduct,
-  })
+    })
+  } catch (error) {
+    next(error);
+  }
+
 });
 
 //Patch route
 
-router.patch('/products/:id', (req, res)=>{
+router.patch('/products/:id',
+validatorHandler(updateProductSchema,'body')
+, (req, res)=>{
   const body = req.body;
   const {id} = req.params;
 

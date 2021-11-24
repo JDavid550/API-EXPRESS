@@ -1,4 +1,5 @@
 const faker = require('faker');
+const boom = require('@hapi/boom');
 
 class ProductServices {
   constructor(){
@@ -44,7 +45,8 @@ class ProductServices {
     const product = this.products.findIndex(item => item.id == id);
     const {name,price, image} = changes;
     if (product === -1) {
-      throw new Error('Product not found');
+      //throw new Error('Product not found');
+      throw boom.notFound('Producto no encontrado'); //Uso de boom para manejo de errores
     } else {
       this.products[product] = {
         id:id,

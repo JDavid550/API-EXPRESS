@@ -13,16 +13,16 @@ const router = express.Router();
 
 //Getters
 
-router.get('/products',(req,res)=>{
+router.get('/',async (req,res)=>{
   const {size} = req.query;
 
-  const products = productServices.find(req,res,size);
+  const products = await productServices.find();
 
   res.status(200).json(products);
 
 });
 
-router.get('/products/:id', (req,res, next)=>{
+router.get('/:id', (req,res, next)=>{
   const {id} = req.params;
   try {
     if (id > 50) {

@@ -1,9 +1,14 @@
 const faker = require('faker');
 const boom = require('@hapi/boom');
+const pool = require('./../libs/pool')
 
 class ProductServices {
   constructor(){
     this.products=[];
+    this.pool = pool;
+    this.pool.on('error', (err) => {
+      console.error(err);
+    })
   }
 
   generate(req,res,size){
@@ -31,8 +36,11 @@ class ProductServices {
   }
 
 
-  find(req,res,size){
-    return this.generate(req,res,size);
+  async find(req,res,size){
+    const query = 'SELECT * FROM public.users'
+    const rta = await this.pool.query(query);
+    return rta.rows;
+     /* return this.generate(req,res,size); Así estaba antes cuando generaba registros que quedaban en caché antes de conectar a BD*/
   }
 
 

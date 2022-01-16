@@ -37,7 +37,7 @@ class ProductServices {
 
 
   async find(req,res,size){
-    const query = 'SELECT * FROM public.users'
+    const query = 'SELECT * FROM public.products'
     const rta = await this.pool.query(query);
     return rta.rows;
      /* return this.generate(req,res,size); Así estaba antes cuando generaba registros que quedaban en caché antes de conectar a BD*/

@@ -3,7 +3,7 @@ const express = require('express');
 const UserServices = require('./../services/user.services');
 
 const validatorHandler = require('./../middlewares/validator.handler');
-//const {createProductSchema,updateProductSchema} = require('./../schemas/product.schema');
+const {createUserScheme, updateUserScheme} = require('./../schemas/user.schema');
 
 
 const userServices = new UserServices();
@@ -22,7 +22,7 @@ router.get('/', async (req,res) => {
 
 });
 
-/* router.get('/users/:id', (req,res, next)=>{
+router.get('/:id', async (req,res, next)=>{
   const {id} = req.params;
   try {
     if (id > 50) {
@@ -30,10 +30,10 @@ router.get('/', async (req,res) => {
         message:"Not found"
       })
     }else{
-      const product = productServices.findOne(id);
+      const user = await userServices.findOne(id);
       res.status(200).json({
         message:"Item found",
-        product
+        user: user
       })
     }
   } catch (error) {
@@ -42,20 +42,20 @@ router.get('/', async (req,res) => {
 
 
 
-})
+})*
 
 //Post route
 
-router.post('/users',
-validatorHandler(createProductSchema, 'body') ///Revisar acá
+router.post('/',
+validatorHandler(createUserScheme, 'body') ///Revisar acá
 ,async (req, res, next)=>{
   try {
     const body = req.body;
     const data = body;
-    const newProduct = await productServices.create(res, data);
+    const newUser = await userServices.create(data);
     res.status(201).json({
-    message:"new Product",
-    newProduct,
+    message:"new User",
+    newUser,
     })
   } catch (error) {
     next(error);
@@ -65,25 +65,25 @@ validatorHandler(createProductSchema, 'body') ///Revisar acá
 
 //Patch route
 
-router.patch('/users/:id',
-validatorHandler(updateProductSchema,'body')
-, (req, res)=>{
+router.patch('/:id',
+validatorHandler(updateUserScheme,'body')
+, async (req, res)=>{
   const body = req.body;
   const {id} = req.params;
 
-  const updatedProduct = productServices.update(id, body);
+  const updatedUser = await userServices.update(id, body);
   res.status(200).json({
     message:"updated",
-    updatedProduct
+    updatedUser
   })
-})
+});
 
 //Delete route
 
-router.delete('/users/:id', (req, res)=>{
+router.delete('/:id', async (req, res)=>{
   const {id} = req.params;
-  const deletedProduct = productServices.delete(id);
+  const deletedProduct = await userServices.delete(id);
   res.json({deletedProduct});
-}) */
+})
 
 module.exports = router;

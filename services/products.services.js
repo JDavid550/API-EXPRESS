@@ -1,14 +1,14 @@
 const faker = require('faker');
 const boom = require('@hapi/boom');
-const pool = require('./../libs/pool')
+const sequelize = require('./../libs/sequelize')
 
 class ProductServices {
   constructor(){
     this.products=[];
-    this.pool = pool;
+  /*   this.pool = pool;
     this.pool.on('error', (err) => {
       console.error(err);
-    })
+    }) */
   }
 
   generate(req,res,size){
@@ -38,8 +38,8 @@ class ProductServices {
 
   async find(req,res,size){
     const query = 'SELECT * FROM public.products'
-    const rta = await this.pool.query(query);
-    return rta.rows;
+    const [data,metadata] = await sequelize.query(query);
+    return {data, metadata};
      /* return this.generate(req,res,size); Así estaba antes cuando generaba registros que quedaban en caché antes de conectar a BD*/
   }
 

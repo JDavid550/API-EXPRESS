@@ -1,16 +1,16 @@
 const Joi = require('joi');
 
-const name = Joi.string().alphanum().min(3).max(15);
-const price = Joi.number().integer().min(10);
+const product_name = Joi.string().alphanum().min(3).max(15);
+const product_price = Joi.string();
 
 const createProductSchema = Joi.object({
-  name:name.required(),
-  price:price.required(),
+  product_name:product_name.required(),
+  product_price:product_price.required(),
 });
 
 const updateProductSchema = Joi.object({
-  name:name,
-  price:price,
+  product_name:product_name,
+  product_price:product_price,
 });
 
 module.exports = {createProductSchema,updateProductSchema};

@@ -3,12 +3,10 @@ const Joi = require('joi');
 //const ID = Joi.number().integer();
 const email = Joi.string();
 const password =  Joi.string().min(4);
-const createdAt = Joi.string().min(4);
 
 const createUserScheme = Joi.object({
   email: email.required(),
   password: password.required(),
-  createdAt: createdAt.required()
 });
 
 const updateUserScheme = Joi.object({

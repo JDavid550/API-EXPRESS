@@ -18,8 +18,11 @@ const CategoryScheme = {
 }
 
 class Category extends Model{
-  static associate(){
-
+  static associate(models){
+    this.hasMany(models.Product,{
+      as : 'products',
+      foreignKey :'categoryID'
+    })
   }
 
   static config(sequelize){

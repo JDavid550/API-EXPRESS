@@ -24,13 +24,17 @@ class CategoriesService {
     /* const query = 'SELECT * FROM public.categories'
     const rta = await this.pool.query(query);
     return rta.rows; */
-    const categories = await models.Category.findAll();
+    const categories = await models.Category.findAll({
+      include:['products']
+    });
     return categories;
   }
 
 
   async findOne(id){
-    const category = await models.Category.findByPk(id);
+    const category = await models.Category.findByPk(id,{
+      include:['products']
+    });
     if (!category) {
       throw boom.notFound("Category not found");
     }

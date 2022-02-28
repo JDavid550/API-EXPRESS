@@ -17,7 +17,9 @@ class UserServices {
   }
 
   async find(){
-    const rta = await models.User.findAll();
+    const rta = await models.User.findAll({
+      include:['customer'] //Esto permite que haya asociatividad con entre entidades al momento de hacer los llamados a los endpoints
+    });
     return rta;
   }
 

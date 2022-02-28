@@ -42,7 +42,9 @@ class ProductServices {
 
 
   async find(){
-    const products = await models.Product.findAll();
+    const products = await models.Product.findAll({
+      include:['category']
+    });
     return products;
     /* const query = 'SELECT * FROM public.products'
     const [data,metadata] = await sequelize.query(query);

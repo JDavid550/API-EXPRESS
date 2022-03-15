@@ -2,34 +2,42 @@ const { extend } = require('@hapi/boom');
 
 const { Model, DataTypes, Sequelize } = require('sequelize');
 
-const ORDERS_TABLE = 'orders';
-const { CUSTOMER_TABLE } = require('./customer.model');
+const ORDERS_PRODUCT_TABLE = 'orders/products';
+const { ORDERS_TABLE } = require('./order.model');
+const { PRODUCT_TABLE } = require('./products.model');
 
-const OrderScheme = {
+const OrderProductScheme = {
   ID: {
     allowNull: false,
     autoIncrement: true,
     primaryKey: true,
     type: DataTypes.INTEGER,
   },
-  product_ordered: {
-    allowNull: false,
-    type: DataTypes.INTEGER,
-  },
-  customerId: {
-    field: 'ordered_by',
+  orderId: {
+    field: 'order_id',
     allowNull: false,
     type: DataTypes.INTEGER,
     references: {
-      model: CUSTOMER_TABLE,
-      key: 'id',
+      model: ORDERS_TABLE,
+      key: 'ID',
     },
     onUpdate: 'CASCADE',
     onDelete: 'SET NULL',
   },
-  cost: {
+  productId: {
+    field: 'product_id',
     allowNull: false,
-    type: DataTypes.STRING,
+    type: DataTypes.INTEGER,
+    references: {
+      model: PRODUCT_TABLE,
+      key: 'ID',
+    },
+    onUpdate: 'CASCADE',
+    onDelete: 'SET NULL',
+  },
+  amount:{
+    allowNull:false,
+    type: DataTypes.INTEGER
   },
   createdAt: {
     field: 'created_at',
@@ -39,27 +47,19 @@ const OrderScheme = {
   }
 };
 
-class Order extends Model {
+class OrderProduct extends Model {
   static associate(models) {
-    this.belongsTo(models.Customer, {
-      as: 'customer',
-    });
-    this.belongsToMany(models.Product,{
-      as:'items',
-      through: models.OrderProduct,
-      foreignKey: 'orderId',
-      otherKey:'productId'
-    })
+
   }
 
   static config(sequelize) {
     return {
       sequelize,
-      tableName: ORDERS_TABLE,
-      modelName: 'Order',
+      tableName: ORDERS_PRODUCT_TABLE,
+      modelName: 'OrderProduct',
       timestamps: false,
     };
   }
 }
 
-module.exports = { ORDERS_TABLE, OrderScheme, Order };
+module.exports = { ORDERS_PRODUCT_TABLE, OrderProductScheme, OrderProduct };

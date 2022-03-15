@@ -3,7 +3,7 @@ const express = require('express');
 const OrderServices = require('./../services/order.services');
 
 const validatorHandler = require('./../middlewares/validator.handler');
-const { createOrderScheme,updateOrderScheme } = require('./../schemas/orders.scheme');
+const { createOrderScheme,updateOrderScheme, getOrderScheme, addItemScheme } = require('./../schemas/orders.scheme');
 
 
 const orderServices = new OrderServices();
@@ -22,7 +22,9 @@ router.get('/', async (req,res) => {
 
 });
 
-router.get('/:id', async (req,res, next)=>{
+router.get('/:id',
+validatorHandler(getOrderScheme, 'params')
+,async (req,res, next)=>{
   const {id} = req.params;
   try {
     const order = await orderServices.findOne(id);
@@ -50,6 +52,25 @@ validatorHandler(createOrderScheme, 'body')
     res.status(201).json({
     message:"new Order",
     newOrder,
+    })
+  } catch (error) {
+    next(error);
+  }
+
+});
+
+// This post request is to add an item linked to the order
+
+router.post('/add-item',
+validatorHandler(addItemScheme, 'body')
+,async (req, res, next)=>{
+  try {
+    const body = req.body;
+    const data = body;
+    const newItem = await orderServices.addItem(data);
+    res.status(201).json({
+    message:"new Item",
+    newItem,
     })
   } catch (error) {
     next(error);

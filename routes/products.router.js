@@ -4,7 +4,7 @@ const faker = require('faker');
 const ProductServices = require('./../services/products.services');
 
 const validatorHandler = require('./../middlewares/validator.handler');
-const {createProductSchema,updateProductSchema} = require('./../schemas/product.schema');
+const {createProductSchema,updateProductSchema, queryProductScheme} = require('./../schemas/product.schema');
 
 
 const productServices = new ProductServices();
@@ -13,9 +13,11 @@ const router = express.Router();
 
 //Getters
 
-router.get('/',async (req,res)=>{
+router.get('/',
+validatorHandler(queryProductScheme,'query')
+,async (req,res)=>{
   try{
-    const products = await productServices.find()
+    const products = await productServices.find(req.query)
     res.json(products)
   }catch(error){
     res.json(error)

@@ -20,7 +20,7 @@ const ProductScheme = {
 
   product_price:{
     allowNull:false,
-    type:DataTypes.STRING,
+    type:DataTypes.INTEGER,
   },
 
   categoryID:{

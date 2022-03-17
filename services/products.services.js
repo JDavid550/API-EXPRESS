@@ -1,4 +1,4 @@
-const faker = require('faker');
+const { Op } = require('sequelize');
 const boom = require('@hapi/boom');
 const sequelize = require('./../libs/sequelize')
 
@@ -41,10 +41,32 @@ class ProductServices {
   }
 
 
-  async find(){
-    const products = await models.Product.findAll({
-      include:['category']
-    });
+  async find(query){
+    const options = {
+      include:['category'],
+      where:{}
+    }
+
+    const {limit, offset} = query;
+    if (limit && offset) {
+      options.limit = limit
+      options.offset = offset
+    }
+//This is to filter the products as of price in the query
+    const { product_price } = query;
+    if (product_price) {
+      options.where.product_price = product_price;
+    }
+
+    const { min_price, max_price } = query;
+    if (min_price && max_price) {
+      options.where.product_price = {
+        [Op.gte]:min_price,
+        [Op.lte]: max_price,
+      };
+    }
+
+    const products = await models.Product.findAll(options);
     return products;
     /* const query = 'SELECT * FROM public.products'
     const [data,metadata] = await sequelize.query(query);
